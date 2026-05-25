@@ -1,9 +1,12 @@
+from secrets import token_hex
+
+from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
     database_url: str = "postgresql+psycopg2://postgres:postgres@db:5432/nubank_gastos"
-    jwt_secret_key: str = "e7f4b7084d56455aa7813bc4da8bfc3806f4868f07724d9ea0e80b737bd60589"
+    jwt_secret_key: str = Field(default_factory=lambda: token_hex(32))
     jwt_algorithm: str = "HS256"
     jwt_expire_minutes: int = 60 * 24
     cors_origins: str = "http://localhost:3000,http://frontend"
