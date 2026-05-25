@@ -99,7 +99,7 @@ async function loadDashboard() {
 
   renderMonthlyChart(monthly.data);
   renderAnnualChart(annual.data);
-  averageCard.textContent = average.average_last_6_months == null ? "R$ 0,00" : currency(average.average_last_6_months);
+  averageCard.textContent = average.average_last_6_months === null ? "R$ 0,00" : currency(average.average_last_6_months);
 
   futureExpensesBody.innerHTML = future.data.length
     ? future.data
@@ -205,12 +205,12 @@ linkAccountButton.addEventListener("click", async () => {
 });
 
 expensesTable.addEventListener("change", async (event) => {
-  if (!event.target.classList.contains("expense-category-select") || !event.target.value) return;
+  if (!event.target.classList.contains("expense-category-select")) return;
   const expenseId = event.target.dataset.expenseId;
   try {
     await api(`/expenses/${expenseId}/category`, {
       method: "PATCH",
-      body: JSON.stringify({ category_id: Number(event.target.value) }),
+      body: JSON.stringify({ category_id: event.target.value ? Number(event.target.value) : null }),
     });
   } catch (error) {
     alert(error.message);

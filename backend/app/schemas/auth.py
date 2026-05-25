@@ -50,7 +50,7 @@ class ExpenseResponse(BaseModel):
 
 
 class UpdateExpenseCategoryRequest(BaseModel):
-    category_id: int
+    category_id: int | None
 
 
 class MonthlyChartItem(BaseModel):

@@ -29,6 +29,12 @@ Aplicação fullstack dockerizada para cadastro/login com confirmação por emai
 docker compose up --build
 ```
 
+Opcionalmente, defina um segredo JWT forte:
+
+```bash
+JWT_SECRET_KEY="$(openssl rand -hex 32)" docker compose up --build
+```
+
 Serviços:
 
 - Frontend: http://localhost:3000

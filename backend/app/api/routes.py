@@ -37,6 +37,10 @@ from app.services.email_service import send_verification_email
 router = APIRouter(prefix="/api")
 
 
+def _utcnow_naive() -> datetime:
+    return datetime.now(timezone.utc).replace(tzinfo=None)
+
+
 def _has_nubank_link(db: Session, user_id: int) -> bool:
     return db.scalar(select(NubankLink.id).where(NubankLink.user_id == user_id)) is not None
 
@@ -55,7 +59,7 @@ async def register(payload: RegisterRequest, db: Session = Depends(get_db)):
     verification = EmailVerificationToken(
         user_id=user.id,
         token=token,
-        expires_at=datetime.utcnow() + timedelta(hours=24),
+        expires_at=_utcnow_naive() + timedelta(hours=24),
         used=False,
     )
     db.add(verification)
@@ -68,7 +72,7 @@ async def register(payload: RegisterRequest, db: Session = Depends(get_db)):
 @router.get("/auth/verify", response_model=MessageResponse)
 def verify_registration(token: str, db: Session = Depends(get_db)):
     record = db.scalar(select(EmailVerificationToken).where(EmailVerificationToken.token == token))
-    if not record or record.used or record.expires_at < datetime.utcnow():
+    if not record or record.used or record.expires_at < _utcnow_naive():
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Token inválido ou expirado")
 
     user = db.scalar(select(User).where(User.id == record.user_id))
@@ -335,6 +339,11 @@ def update_expense_category(
     expense = db.scalar(select(Expense).where(Expense.id == expense_id, Expense.user_id == current_user.id))
     if not expense:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Gasto não encontrado")
+
+    if payload.category_id is None:
+        expense.category_id = None
+        db.commit()
+        return MessageResponse(message="Categoria removida com sucesso")
 
     category = db.scalar(
         select(Category).where(

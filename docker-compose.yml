@@ -21,11 +21,12 @@ services:
       context: ./backend
     environment:
       DATABASE_URL: postgresql+psycopg2://postgres:postgres@db:5432/nubank_gastos
-      JWT_SECRET_KEY: super-secret-key
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY:-replace-with-a-strong-random-secret}
       SMTP_HOST: mailhog
       SMTP_PORT: 1025
       APP_BASE_URL: http://localhost:8000
       FRONTEND_BASE_URL: http://localhost:3000
+      CORS_ORIGINS: http://localhost:3000,http://frontend
     depends_on:
       - db
       - mailhog
