@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nubank Gastos</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main id="auth-view" class="auth-container">
+      <section class="card">
+        <h1>Nubank Gastos</h1>
+        <div class="tabs">
+          <button id="show-login" class="active">Login</button>
+          <button id="show-register">Cadastro</button>
+        </div>
+
+        <form id="login-form" class="form active">
+          <input id="login-email" type="email" placeholder="Email" required />
+          <input id="login-password" type="password" placeholder="Senha" required />
+          <button type="submit">Entrar</button>
+        </form>
+
+        <form id="register-form" class="form">
+          <input id="register-email" type="email" placeholder="Email" required />
+          <input id="register-password" type="password" placeholder="Senha (mínimo 8 caracteres)" required minlength="8" />
+          <button type="submit">Cadastrar</button>
+        </form>
+        <p id="auth-message"></p>
+      </section>
+    </main>
+
+    <main id="app-view" class="app hidden">
+      <aside class="sidebar">
+        <h2>Nubank Gastos</h2>
+        <button data-page="dashboard" class="menu-btn active">Dashboard</button>
+        <button data-page="categorization" class="menu-btn">Categorização</button>
+        <button data-page="link" class="menu-btn">Linkar conta</button>
+        <button id="logout-btn" class="logout">Sair</button>
+      </aside>
+
+      <section class="content">
+        <article id="dashboard-page" class="page active">
+          <header>
+            <h2>Dashboard</h2>
+            <p id="link-status"></p>
+            <button id="go-link-page">Linkar conta Nubank</button>
+          </header>
+
+          <div class="grid">
+            <div class="card chart-card">
+              <h3>Gastos do mês</h3>
+              <canvas id="monthly-chart"></canvas>
+            </div>
+            <div class="card chart-card">
+              <h3>Gasto anual</h3>
+              <canvas id="annual-chart"></canvas>
+            </div>
+            <div class="card metric-card">
+              <h3>Gasto médio (últimos 6 meses)</h3>
+              <p id="average-card">R$ 0,00</p>
+            </div>
+            <div class="card table-card">
+              <h3>Gastos futuros</h3>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Descrição</th>
+                    <th>Parcela</th>
+                    <th>Vencimento</th>
+                    <th>Valor</th>
+                  </tr>
+                </thead>
+                <tbody id="future-expenses"></tbody>
+              </table>
+            </div>
+          </div>
+        </article>
+
+        <article id="categorization-page" class="page">
+          <header>
+            <h2>Categorização</h2>
+            <button id="open-category-modal">Nova categoria</button>
+          </header>
+          <table>
+            <thead>
+              <tr>
+                <th>Descrição</th>
+                <th>Data</th>
+                <th>Valor</th>
+                <th>Categoria</th>
+              </tr>
+            </thead>
+            <tbody id="expenses-table"></tbody>
+          </table>
+        </article>
+
+        <article id="link-page" class="page">
+          <header>
+            <h2>Linkar conta Nubank</h2>
+            <p>Conecte sua conta para liberar os gráficos do dashboard.</p>
+          </header>
+          <button id="link-account-btn">Linkar conta agora</button>
+          <p id="link-message"></p>
+        </article>
+      </section>
+    </main>
+
+    <dialog id="category-modal">
+      <form id="new-category-form" method="dialog">
+        <h3>Nova categoria</h3>
+        <input id="new-category-name" placeholder="Nome da categoria" required />
+        <div class="modal-actions">
+          <button type="button" id="cancel-category-modal">Cancelar</button>
+          <button type="submit">Salvar</button>
+        </div>
+      </form>
+    </dialog>
+
+    <script src="app.js"></script>
+  </body>
+</html>
